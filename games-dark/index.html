@@ -6,15 +6,14 @@
     <title>Welkom bij games.benjamintjoa.com</title>
     <link rel="icon" href="images/ico.ico" type="image/ico">
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-HHY0YKD8VS"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HHY0YKD8VS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-  gtag('config', 'G-HHY0YKD8VS');
-</script>
-<!--Ja of #f5f5f7.-->       <!--Ja of #1d1d1f.-->
+        gtag('config', 'G-HHY0YKD8VS');
+    </script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
@@ -75,10 +74,71 @@
         .play-button:hover {
             background-color: #0056b3;
         }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .popup-title {
+            color: #007AFF;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .popup-description {
+            font-size: 1em;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .popup-btns {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            gap: 20px;
+        }
+        .popup-btn {
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .popup-btn.donate {
+            background-color: #007AFF;
+            color: #fff;
+        }
+        .popup-btn.donate:hover {
+            background-color: #0056b3;
+        }
+        .popup-btn.not-now {
+            background-color: #FF3B30;
+            color: #fff;
+        }
+        .popup-btn.not-now:hover {
+            background-color: #FF2C29;
+        }
+        .popup-heart {
+            font-size: 2em;
+            color: #007AFF;
+        }
     </style>
 </head>
 <body>
-</div>
+
     <h1>Games.benjamintjoa.com</h1>
     <div class="games-grid">
         <div class="game-card">
@@ -103,12 +163,12 @@
             </div>
         </div>
         <div class="game-card">
-    <img src="images/Arena-King.jpg" alt="Arena King" class="game-image">
-    <div class="game-info">
-        <h2 class="game-title">Arena King</h2>
-        <a href="https://link.benjamintjoa.com/survival-race/" class="play-button" target="_blank" rel="noopener noreferrer">Speel nu</a>
-    </div>
-</div>
+            <img src="images/Arena-King.jpg" alt="Arena King" class="game-image">
+            <div class="game-info">
+                <h2 class="game-title">Arena King</h2>
+                <a href="https://link.benjamintjoa.com/survival-race/" class="play-button" target="_blank" rel="noopener noreferrer">Speel nu</a>
+            </div>
+        </div>
         <div class="game-card">
             <img src="images/Snow-Rider-3D.jpg" alt="Snow Rider 3D" class="game-image">
             <div class="game-info">
@@ -289,9 +349,35 @@
                 <h2 class="game-title">Er komen meer games...</h2>
                 <h2 class="game-title">Je kan verzoeken aan mij geven!</h2>
                 <h2 class="game-title">Door mij bijvoorbeeld te mailen op games@benjamintjoa.com . <h2>
-
             </div>
         </div>
     </div>
+
+    <div id="popup">
+        <div class="popup-container">
+            <h1 class="popup-title">Support.benjamintjoa.com</h1>
+            <p class="popup-description">Het zou tof zijn als je een klein bedrag wilt doneren! 💙</p>
+            <div class="popup-btns">
+                <a href="https://support.benjamintjoa.com" class="popup-btn donate" target="_blank">Doneer</a>
+                <a href="#" class="popup-btn not-now" id="close-popup">Niet nu</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPopup() {
+            const randomNumber = Math.floor(Math.random() * 31) + 1;
+            if (randomNumber === 25) {
+                document.getElementById('popup').style.display = 'flex';
+            }
+        }
+
+        document.getElementById('close-popup').addEventListener('click', function() {
+            document.getElementById('popup').style.display = 'none';
+        });
+
+        window.onload = showPopup;
+    </script>
+
 </body>
 </html>

@@ -239,7 +239,7 @@
             </div>
         </div>
         <div class="game-card">
-            <img src="https://cloud.benjamintjoa.com/games/images/subway-surfers-newyork.jpg" alt="x" class="game-image">
+            <img src="https://cloud.benjamintjoa.com/games/images/subway-surfers-newyork.jpg" alt="Subway Surfers New York" class="game-image">
             <div class="game-info">
                 <h2 class="game-title">Subway Surfers New York</h2>
                 <a href="https://games.benjamintjoa.com/subway-surfers-newyork" class="play-button" target="_blank" rel="noopener noreferrer">Speel nu</a>
@@ -435,7 +435,7 @@
             </div>
         </div>
         <div class="game-card">
-            <img src="https://cloud.benjamintjoa.com/games/images/brain-test-2.jpg" alt="Water Sort" class="game-image">
+            <img src="https://cloud.benjamintjoa.com/games/images/brain-test-2.jpg" alt="Brain Test 2" class="game-image">
             <div class="game-info">
                 <h2 class="game-title">Brain Test 2</h2>
                 <a href="https://games.benjamintjoa.com/brain-test-2" class="play-button" target="_blank" rel="noopener noreferrer">Speel nu</a>
@@ -505,12 +505,74 @@
     </div>
 
     <script>
+        function setCookie(name, value, days) {
+            var expires = "";
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days*24*60*60*1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        function applyBlueTheme() {
+            document.body.style.backgroundColor = "#0D102D";
+            document.querySelectorAll(".game-card").forEach(function(card) {
+                card.style.backgroundColor = "#fff";
+                var title = card.querySelector(".game-title");
+                if (title) {
+                    title.style.color = "#1d1d1f";
+                }
+            });
+        }
+
+        function applyBlackTheme() {
+            document.body.style.backgroundColor = "#000000";
+            document.querySelectorAll(".game-card").forEach(function(card) {
+                card.style.backgroundColor = "#0D102D";
+                var title = card.querySelector(".game-title");
+                if (title) {
+                    title.style.color = "#ffffff";
+                }
+            });
+        }
+
         function showPopup() {
             const randomNumber = Math.floor(Math.random() * 31) + 1;
             if (randomNumber === 25) {
                 document.getElementById('popup').style.display = 'flex';
             }
         }
+
+        window.onload = function() {
+            showPopup();
+
+            const bgTheme = getCookie("bgTheme");
+            if (bgTheme === "black") {
+                applyBlackTheme();
+            } else {
+                applyBlueTheme();
+            }
+
+            const titleTheme = getCookie("titleTheme");
+            const siteTitle = document.getElementById('site-title');
+            if (titleTheme === "rainbow") {
+                siteTitle.classList.add('rainbow-text');
+            } else {
+                siteTitle.classList.remove('rainbow-text');
+            }
+        };
 
         document.getElementById('close-popup').addEventListener('click', function() {
             document.getElementById('popup').style.display = 'none';
@@ -520,8 +582,10 @@
             e.stopPropagation();
             if (this.classList.contains('rainbow-text')) {
                 this.classList.remove('rainbow-text');
+                setCookie("titleTheme", "blue", 365);
             } else {
                 this.classList.add('rainbow-text');
+                setCookie("titleTheme", "rainbow", 365);
             }
         });
 
@@ -529,27 +593,13 @@
             if (e.target.closest('.game-card') || e.target.closest('#site-title')) return;
             const currentColor = window.getComputedStyle(document.body).backgroundColor;
             if (currentColor === "rgb(0, 0, 0)") {
-                document.body.style.backgroundColor = "#0D102D";
-                document.querySelectorAll(".game-card").forEach(function(card) {
-                    card.style.backgroundColor = "#fff";
-                    const title = card.querySelector(".game-title");
-                    if (title) {
-                        title.style.color = "#1d1d1f";
-                    }
-                });
+                applyBlueTheme();
+                setCookie("bgTheme", "blue", 365);
             } else {
-                document.body.style.backgroundColor = "#000000";
-                document.querySelectorAll(".game-card").forEach(function(card) {
-                    card.style.backgroundColor = "#0D102D";
-                    const title = card.querySelector(".game-title");
-                    if (title) {
-                        title.style.color = "#ffffff";
-                    }
-                });
+                applyBlackTheme();
+                setCookie("bgTheme", "black", 365);
             }
         });
-
-        window.onload = showPopup;
     </script>
 
 </body>

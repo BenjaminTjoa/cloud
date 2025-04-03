@@ -608,18 +608,18 @@
             showPopup();
 
             const bgTheme = getCookie("bgTheme");
-            if (bgTheme === "black") {
-                applyBlackTheme();
-            } else {
+            if (bgTheme === "blue") {
                 applyBlueTheme();
+            } else {
+                applyBlackTheme();
             }
 
             const titleTheme = getCookie("titleTheme");
             const siteTitle = document.getElementById('site-title');
-            if (titleTheme === "rainbow") {
-                siteTitle.classList.add('rainbow-text');
-            } else {
+            if (titleTheme === "blue") {
                 siteTitle.classList.remove('rainbow-text');
+            } else {
+                siteTitle.classList.add('rainbow-text');
             }
         };
 

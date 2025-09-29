@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Oefenen: Franse bijvoeglijke naamwoorden</title>
+    <style>
+      :root {
+        --bg: #000000;
+        --card: rgba(255, 255, 255, 0.06);
+        --muted: rgba(255, 255, 255, 0.6);
+        --accent: rgba(255, 255, 255, 0.95);
+        --success: #6bd18a;
+        --danger: #ff6b6b;
+        --glass-border: rgba(255, 255, 255, 0.08);
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: var(--bg);
+        font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+          sans-serif;
+        color: #fff;
+      }
+      .wrap {
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+      }
+      .card {
+        width: 980px;
+        max-width: 96%;
+        background: var(--card);
+        border-radius: 16px;
+        padding: 26px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(8px);
+      }
+      h1 {
+        margin: 0 0 8px 0;
+        font-weight: 600;
+        color: var(--accent);
+      }
+      p.lead {
+        margin: 0 0 18px 0;
+        color: var(--muted);
+      }
+      .exercise {
+        background: rgba(255, 255, 255, 0.02);
+        padding: 14px;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.02);
+      }
+      .sentence {
+        font-size: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+      }
+      .article {
+        opacity: 0.85;
+      }
+      input.adj {
+        min-width: 120px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: transparent;
+        color: var(--accent);
+        outline: none;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+      }
+      .hint {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+      .controls {
+        display: flex;
+        gap: 10px;
+        margin: 16px 0 8px 0;
+      }
+      button {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 0;
+        background: transparent;
+        color: var(--accent);
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      button.primary {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.07),
+          rgba(255, 255, 255, 0.02)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        font-weight: 600;
+      }
+      .result {
+        margin-top: 10px;
+        font-size: 14px;
+        padding: 10px;
+        border-radius: 8px;
+      }
+      .ok {
+        background: rgba(107, 209, 138, 0.08);
+        color: var(--success);
+        border: 1px solid rgba(107, 209, 138, 0.12);
+      }
+      .bad {
+        background: rgba(255, 107, 107, 0.06);
+        color: var(--danger);
+        border: 1px solid rgba(255, 107, 107, 0.12);
+      }
+      .almost {
+        background: rgba(255, 200, 60, 0.06);
+        color: #ffd36b;
+        border: 1px solid rgba(255, 200, 60, 0.12);
+      }
+      .correct-sentence {
+        margin-top: 8px;
+        font-weight: 600;
+        color: var(--accent);
+      }
+      small.note {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+      }
+      footer {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      @media (max-width: 560px) {
+        .sentence {
+          font-size: 16px;
+        }
+        input.adj {
+          min-width: 90px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <h1>Franse bijvoeglijke naamwoorden — oefening</h1>
+        <p class="lead">
+          Vul het bijvoeglijk naamwoord in de juiste vorm in. Gebruik alleen de
+          gegeven bijvoeglijke naamwoorden. Zet het woord
+          <strong>óf vóór</strong> <em>óf</em> na het zelfstandig naamwoord —
+          laat het andere vak leeg. Klik op "Controleer alle antwoorden".
+        </p>
+
+        <div id="exercises"></div>
+
+        <div class="controls">
+          <button class="primary" onclick="checkAll()">
+            Controleer alle antwoorden
+          </button>
+          <button onclick="revealAll()">Toon alle juiste antwoorden</button>
+          <button onclick="resetAll()">Reset</button>
+        </div>
+
+        <small class="note"
+          >Opmerking: accenten (é, ï, è, ...) horen erbij — je krijgt feedback
+          als alleen de accenten missen.</small
+        >
+        <footer>Gemaakt voor jouw toets — succes! 🍀</footer>
+      </div>
+    </div>
+
+    <script>
+      const adjData = {
+        nouveau: {
+          placement: "before",
+          forms: ["nouveau", "nouvelle", "nouveaux", "nouvelles"],
+          specialBeforeVowel: "nouvel",
+        },
+        italien: {
+          placement: "after",
+          forms: ["italien", "italienne", "italiens", "italiennes"],
+        },
+        grand: {
+          placement: "before",
+          forms: ["grand", "grande", "grands", "grandes"],
+        },
+        bon: { placement: "before", forms: ["bon", "bonne", "bons", "bonnes"] },
+        autre: {
+          placement: "before",
+          forms: ["autre", "autre", "autres", "autres"],
+        },
+        bleu: {
+          placement: "after",
+          forms: ["bleu", "bleue", "bleus", "bleues"],
+        },
+        sportif: {
+          placement: "after",
+          forms: ["sportif", "sportive", "sportifs", "sportives"],
+        },
+        branché: {
+          placement: "after",
+          forms: ["branché", "branchée", "branchés", "branchées"],
+        },
+        jeune: {
+          placement: "before",
+          forms: ["jeune", "jeune", "jeunes", "jeunes"],
+        },
+        naïf: {
+          placement: "after",
+          forms: ["naïf", "naïve", "naïfs", "naïves"],
+        },
+        beau: {
+          placement: "before",
+          forms: ["beau", "belle", "beaux", "belles"],
+          specialBeforeVowel: "bel",
+        },
+        dernier: {
+          placement: "before",
+          forms: ["dernier", "dernière", "derniers", "dernières"],
+        },
+        vrai: {
+          placement: "before",
+          forms: ["vrai", "vraie", "vrais", "vraies"],
+        },
+      };
+
+      const exercises = [
+        {
+          id: 1,
+          article: "Ma",
+          noun: "maison",
+          gender: "f",
+          number: "sing",
+          adj: "nouveau",
+          hint: "(nouveau)",
+        },
+        {
+          id: 2,
+          article: "J’ai la",
+          noun: "nationalité",
+          gender: "f",
+          number: "sing",
+          adj: "italien",
+          hint: "(italien)",
+        },
+        {
+          id: 3,
+          article: "Tu as les",
+          noun: "yeux",
+          gender: "m",
+          number: "pl",
+          adj: "bleu",
+          hint: "(bleu)",
+        },
+        {
+          id: 4,
+          article: "Il a un",
+          noun: "frère",
+          gender: "m",
+          number: "sing",
+          adj: "grand",
+          hint: "(grand)",
+        },
+        {
+          id: 5,
+          article: "C’est une",
+          noun: "idée",
+          gender: "f",
+          number: "sing",
+          adj: "bon",
+          hint: "(bon)",
+        },
+        {
+          id: 6,
+          article: "J’ai vu une",
+          noun: "voiture",
+          gender: "f",
+          number: "sing",
+          adj: "autre",
+          hint: "(autre)",
+        },
+        {
+          id: 7,
+          article: "Elle porte un",
+          noun: "t-shirt",
+          gender: "m",
+          number: "sing",
+          adj: "sportif",
+          hint: "(sportif)",
+        },
+        {
+          id: 8,
+          article: "Ce sont des",
+          noun: "magasins",
+          gender: "m",
+          number: "pl",
+          adj: "branché",
+          hint: "(branché)",
+        },
+        {
+          id: 9,
+          article: "Voici une",
+          noun: "fille",
+          gender: "f",
+          number: "sing",
+          adj: "jeune",
+          hint: "(jeune)",
+        },
+        {
+          id: 10,
+          article: "Il est un",
+          noun: "garçon",
+          gender: "m",
+          number: "sing",
+          adj: "naïf",
+          hint: "(naïf)",
+        },
+        {
+          id: 11,
+          article: "Tu as un",
+          noun: "chapeau",
+          gender: "m",
+          number: "sing",
+          adj: "beau",
+          hint: "(beau)",
+        },
+        {
+          id: 12,
+          article: "C’est la",
+          noun: "fois",
+          gender: "f",
+          number: "sing",
+          adj: "dernier",
+          hint: "(dernier)",
+        },
+        {
+          id: 13,
+          article: "Il est un",
+          noun: "ami",
+          gender: "m",
+          number: "sing",
+          adj: "vrai",
+          hint: "(vrai)",
+        },
+      ];
+
+      function normalize(s) {
+        return s
+          ? s
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .trim()
+          : "";
+      }
+      function startsWithVowel(word) {
+        return /^[aeiouyhâàéèêëîïôûùœ]/i.test(word || "");
+      }
+      function expectedFormFor(adjLemma, gender, number, noun) {
+        const data = adjData[adjLemma];
+        if (!data) return null;
+        let idx =
+          number === "sing" && gender === "m"
+            ? 0
+            : number === "sing" && gender === "f"
+            ? 1
+            : number === "pl" && gender === "m"
+            ? 2
+            : 3;
+        let form = data.forms[idx];
+        if (
+          (adjLemma === "beau" || adjLemma === "nouveau") &&
+          idx === 0 &&
+          startsWithVowel(noun)
+        ) {
+          form = data.specialBeforeVowel;
+        }
+        return form;
+      }
+      const container = document.getElementById("exercises");
+      exercises.forEach((ex) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "exercise";
+        wrapper.id = "ex-" + ex.id;
+        wrapper.innerHTML = `<div class="sentence"><span class="article">${ex.article}</span><input id="pre-${ex.id}" class="adj" placeholder="voor..." /><span class="article">${ex.noun}</span><input id="post-${ex.id}" class="adj" placeholder="na..." /><span style="opacity:0.6;margin-left:6px">${ex.hint}</span></div><div id="msg-${ex.id}" class="hint"></div>`;
+        container.appendChild(wrapper);
+      });
+      function showExplanation(ex, expected, msgContainer) {
+        const adj = ex.adj,
+          placement = adjData[adj].placement;
+        const p = document.createElement("div");
+        p.style.marginTop = "8px";
+        p.style.fontSize = "13px";
+        p.style.color = "rgba(255,255,255,0.85)";
+        let placeReason = "";
+        if (placement === "before") {
+          placeReason = `Dit bijvoeglijk naamwoord hoort <strong>vóór</strong> het zelfstandig naamwoord omdat het bij de <strong>hand-regel</strong> hoort (denk aan middelvinger = grand, pink = petit, jong, oud, andere, enz.). Alles wat bij de hand hoort komt vóór, net zoals je je hand vóór je mond houdt.`;
+        } else {
+          placeReason = `Dit bijvoeglijk naamwoord hoort <strong>ná</strong> het zelfstandig naamwoord. Het hoort dus niet bij de hand-regel, en daarom komt het erachter.`;
+        }
+        let extra = "";
+        if (adj === "naïf") {
+          extra = `Let op de tréma in "naïf/naïve".`;
+        } else if (adj === "beau") {
+          extra = `Let op: mannelijk enkelvoud vóór een klinker wordt "bel".`;
+        } else if (adj === "nouveau") {
+          extra = `Let op: mannelijk enkelvoud vóór een klinker wordt "nouvel".`;
+        } else if (adj === "autre") {
+          extra = `"Autre" verandert niet in vrouwelijke vorm in het enkelvoud, alleen meervoud krijgt -s.`;
+        } else if (adj === "heureux") {
+          extra = `Vrouwelijk = "heureuse", mannelijk meervoud blijft "heureux".`;
+        }
+        p.innerHTML = `<strong>Waarom:</strong> De correcte vorm bij <em>${
+          ex.article
+        } ${ex.noun}</em> is "<strong>${expected}</strong>" omdat dit woord ${
+          ex.gender === "f" ? "vrouwelijk" : "mannelijk"
+        } is en ${
+          ex.number === "pl" ? "meervoud" : "enkelvoud"
+        }.<br>${placeReason}<br>${extra}`;
+        msgContainer.appendChild(p);
+      }
+      function renderCorrectSentence(ex) {
+        const expected = expectedFormFor(ex.adj, ex.gender, ex.number, ex.noun);
+        return adjData[ex.adj].placement === "before"
+          ? `${ex.article} ${expected} ${ex.noun}`
+          : `${ex.article} ${ex.noun} ${expected}`;
+      }
+      function checkOne(ex) {
+        /* inhoud blijft hetzelfde, gebruikt showExplanation */ return checkCore(
+          ex
+        );
+      }
+      function checkCore(ex) {
+        const pre = document.getElementById("pre-" + ex.id).value.trim(),
+          post = document.getElementById("post-" + ex.id).value.trim(),
+          msg = document.getElementById("msg-" + ex.id);
+        msg.innerHTML = "";
+        const expected = expectedFormFor(ex.adj, ex.gender, ex.number, ex.noun),
+          placement = adjData[ex.adj].placement;
+        const preFilled = pre.length > 0,
+          postFilled = post.length > 0;
+        const userPreNorm = normalize(pre),
+          userPostNorm = normalize(post),
+          expectedNorm = normalize(expected);
+        function showResult(kind, html) {
+          const d = document.createElement("div");
+          d.className = "result " + kind;
+          d.innerHTML = html;
+          msg.appendChild(d);
+        }
+        if (!preFilled && !postFilled) {
+          showResult(
+            "bad",
+            `Geen antwoord ingevuld.<br><span class="correct-sentence">Correct: ${renderCorrectSentence(
+              ex
+            )}</span>`
+          );
+          return false;
+        }
+        if (preFilled && postFilled) {
+          showResult(
+            "bad",
+            `Je hoeft maar één vak in te vullen.<br><span class="correct-sentence">Correct: ${renderCorrectSentence(
+              ex
+            )}</span>`
+          );
+          showExplanation(ex, expected, msg);
+          return false;
+        }
+        if (preFilled) {
+          if (
+            placement === "before" &&
+            userPreNorm === expectedNorm &&
+            pre.toLowerCase() === expected.toLowerCase()
+          ) {
+            showResult("ok", `Goed! "${expected}" staat correct vóór.`);
+            return true;
+          } else if (placement === "before" && userPreNorm === expectedNorm) {
+            showResult(
+              "almost",
+              `Bijna goed — accenten/hoofdletters missen. Correct: ${expected}`
+            );
+            return false;
+          } else if (placement === "after" && userPreNorm === expectedNorm) {
+            showResult(
+              "bad",
+              `Je hebt de goede vorm, maar vóór gezet. Dit hoort ná.`
+            );
+            showExplanation(ex, expected, msg);
+            return false;
+          } else {
+            showResult(
+              "bad",
+              `Fout. Correct: "${expected}" hoort ${
+                placement === "before" ? "vóór" : "ná"
+              }.`
+            );
+            showExplanation(ex, expected, msg);
+            return false;
+          }
+        }
+        if (postFilled) {
+          if (
+            placement === "after" &&
+            userPostNorm === expectedNorm &&
+            post.toLowerCase() === expected.toLowerCase()
+          ) {
+            showResult("ok", `Goed! "${expected}" staat correct ná.`);
+            return true;
+          } else if (placement === "after" && userPostNorm === expectedNorm) {
+            showResult(
+              "almost",
+              `Bijna goed — accenten/hoofdletters missen. Correct: ${expected}`
+            );
+            return false;
+          } else if (placement === "before" && userPostNorm === expectedNorm) {
+            showResult(
+              "bad",
+              `Je hebt de goede vorm, maar ná gezet. Dit hoort vóór.`
+            );
+            showExplanation(ex, expected, msg);
+            return false;
+          } else {
+            showResult(
+              "bad",
+              `Fout. Correct: "${expected}" hoort ${
+                placement === "before" ? "vóór" : "ná"
+              }.`
+            );
+            showExplanation(ex, expected, msg);
+            return false;
+          }
+        }
+      }
+      function checkAll() {
+        let c = 0;
+        container.querySelectorAll(".hint").forEach((m) => (m.innerHTML = ""));
+        exercises.forEach((ex) => {
+          if (checkOne(ex)) c++;
+        });
+        const summary = document.createElement("div");
+        summary.style.marginTop = "12px";
+        summary.style.fontWeight = "600";
+        summary.style.color = "var(--accent)";
+        summary.textContent = `Je hebt ${c} van de ${exercises.length} goed.`;
+        container.appendChild(summary);
+        summary.scrollIntoView({ behavior: "smooth" });
+      }
+      function revealAll() {
+        exercises.forEach((ex) => {
+          const expected = expectedFormFor(
+              ex.adj,
+              ex.gender,
+              ex.number,
+              ex.noun
+            ),
+            placement = adjData[ex.adj].placement;
+          document.getElementById("pre-" + ex.id).value =
+            placement === "before" ? expected : "";
+          document.getElementById("post-" + ex.id).value =
+            placement === "after" ? expected : "";
+          const msg = document.getElementById("msg-" + ex.id);
+          msg.innerHTML = "";
+          const d = document.createElement("div");
+          d.className = "result ok";
+          d.innerHTML = `Antwoord: <strong>${renderCorrectSentence(
+            ex
+          )}</strong>`;
+          msg.appendChild(d);
+          showExplanation(ex, expected, msg);
+        });
+      }
+      function resetAll() {
+        exercises.forEach((ex) => {
+          document.getElementById("pre-" + ex.id).value = "";
+          document.getElementById("post-" + ex.id).value = "";
+          document.getElementById("msg-" + ex.id).innerHTML = "";
+        });
+      }
+    </script>
+  </body>
+</html>
